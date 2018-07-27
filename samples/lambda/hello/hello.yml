@@ -1,0 +1,27 @@
+Type: "PHP::Lambda::Function"
+Properties:
+  Code:
+    #Inline will be written to an index.php file
+    Inline: >
+     <?php
+     namespace Greeting;
+
+     function hello($context, $event, $callback) {
+         $name = $event['name'];
+         $greeting = "Hello $name";
+         if(array_key_exists('SHOUT', $_ENV) && $_ENV['SHOUT']){
+             $greeting = strtoupper($greeting);
+         }
+         call_user_func($callback, "Hello $name");
+     }
+  Handler:
+    file: index.php
+    function: Greeting.hello
+  Description: Greet event.name
+  FunctionName: MyGreeterFunction
+  Environment:
+    SHOUT: true
+  MemorySize: 500
+  ReservedConcurrentExecutions: 1
+  Runtime: PHP7.0
+  Timeout: 2
